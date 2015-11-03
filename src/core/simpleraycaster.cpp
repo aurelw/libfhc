@@ -7,16 +7,29 @@
 
 
 SimpleRayCaster::SimpleRayCaster(const cv::Mat& camMat,
-        int res_x, int res_y) : _res_x(res_x), _res_y(res_y), _camMat(camMat)
+        int res_x, int res_y) : _res_x(res_x), _res_y(res_y), _camMat(camMat),
+        _k1(0), _k2(0), _k3(0), _p1(0), _p2(0)
 {
     cv::invert(camMat, _inverseCamMat);
-    //TODO
-    _k1 = 0.0f;
-    _k2 = 0.0f;
-    _k3 = 0.0f;
-    _p1 = 0.0f;
-    _p2 = 0.0f;
+
+    /* disect camera matrix */
+    _fx = camMat.at<float>(0,0);
+    _fy = camMat.at<float>(1,1);
+    _cx = camMat.at<float>(0,2);
+    _cy = camMat.at<float>(1,2);
 };
+
+
+void SimpleRayCaster::setDistortionModel(float k1, float k2, float k3, 
+        float p1, float p2) 
+{
+    _k1 = k1;
+    _k2 = k2;
+    _k3 = k3;
+    _p1 = p1;
+    _p2 = p2;
+}
+    
 
 
 void SimpleRayCaster::setGeometry(
@@ -36,6 +49,8 @@ void SimpleRayCaster::setGeometry(pcl::PolygonMesh::ConstPtr mesh) {
 
 
 void SimpleRayCaster::printGeometry() {
+    std::cout << "fx: " << _fx << "   fy: " << _fy << std::endl;
+    std::cout << "cx: " << _cx << "   cy: " << _cy << std::endl;
     for (auto vertices : _fIndices) {
         auto pa = _fPoints->at(vertices.vertices[0]);
         auto pb = _fPoints->at(vertices.vertices[1]);
@@ -198,10 +213,9 @@ bool SimpleRayCaster::intersectRayTriangle(const Eigen::Vector3f ray,
 
 
 Eigen::Vector2f SimpleRayCaster::distortPoint(Eigen::Vector2f &p) {
-    //FIXME convert to proper local coordinate
-    // http://stackoverflow.com/questions/10935882/opencv-camera-calibration-re-distort-points-with-camera-intrinsics-extrinsics/13778828#13778828
-    float xu = p[0];
-    float yu = p[1];
+    // convert from (0.0 - 1.0) coordinates to "-0._ - 0._" and c centered.
+    float xu = ((p[0]*_res_x) - _cx) / (float)_fx;
+    float yu = ((p[1]*_res_y) - _cy) / (float)_fy;
 
     float r2 = xu*xu + yu*yu; 
 
@@ -212,6 +226,10 @@ Eigen::Vector2f SimpleRayCaster::distortPoint(Eigen::Vector2f &p) {
     /* tangential distortion */
     xd = xd + (2 * _p1 * xu * yu + _p2 * (r2 + 2 * xu * xu));
     yd = yd + (_p1 * (r2 + 2 * yu * yu) + 2 * _p2 * xu * yu);
+
+    // convert back to "0.0 - 1.0"
+    xd = ((xd * _fx) + _cx) / (float)_res_x;
+    yd = ((yd * _fx) + _cx) / (float)_res_x;
 
     Eigen::Vector2f pd;
     pd << xd, yd;

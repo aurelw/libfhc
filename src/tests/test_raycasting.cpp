@@ -31,7 +31,6 @@ int main(int argc, char** argv) {
                                              0.0, fy, cy,
                                              0.0, 0.0, 1.0);
 
-
     /* load geometry */
     pcl::PolygonMesh::Ptr mesh(new pcl::PolygonMesh);
     pcl::io::loadPolygonFileSTL("geometry.stl", *mesh);
@@ -40,17 +39,18 @@ int main(int argc, char** argv) {
     pcl::fromPCLPointCloud2<pcl::PointXYZ>(mesh->cloud, *geometryCloud);
 
     SimpleRayCaster rc(camMat, res_x, res_y);
+    rc.setDistortionModel(0.091808669, -0.27344111, 0.094382137, 0.0, 0.0);
     //rc.setGeometry(geometryCloud, mesh->polygons);
     rc.setGeometry(mesh);
-    rc.printGeometry();
+    //rc.printGeometry();
 
     rc.renderDebugImage(80,40);
+
     auto masks = rc.renderZMasks();
     auto fgMask = std::get<0>(masks);
     auto bgMask = std::get<1>(masks);
-
     cv::imwrite("fgmask.png", convertToPNG(fgMask));
     cv::imwrite("bgmask.png", convertToPNG(bgMask));
 
-
 }
+

@@ -17,6 +17,7 @@ class SimpleRayCaster {
 
         SimpleRayCaster(const cv::Mat& camMat, int res_x, int res_y);
 
+        void setDistortionModel(float k1, float k2, float k3, float p1, float p2);
         void setGeometry(PointCloud::ConstPtr points, 
                 const std::vector<pcl::Vertices>& inidices);
         void setGeometry(pcl::PolygonMesh::ConstPtr mesh);
@@ -47,6 +48,7 @@ class SimpleRayCaster {
         cv::Mat _camMat;
         cv::Mat _inverseCamMat;
 
+        float _fx, _fy, _cx, _cy;
         float _k1, _k2, _k3, _p1, _p2;
 
         PointCloud::ConstPtr _fPoints;
