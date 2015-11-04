@@ -5,10 +5,12 @@
 #include <pcl/io/vtk_lib_io.h>
 
 
+namespace fhc {
+
 
 SimpleRayCaster::SimpleRayCaster(const cv::Mat& camMat,
         int res_x, int res_y) : _res_x(res_x), _res_y(res_y), _camMat(camMat),
-        _k1(0), _k2(0), _k3(0), _p1(0), _p2(0)
+        _k1(0.0), _k2(0.0), _k3(0.0), _p1(0.0), _p2(0.0)
 {
     cv::invert(camMat, _inverseCamMat);
 
@@ -125,6 +127,7 @@ std::vector<float> SimpleRayCaster::castRay(Eigen::Vector2f &p) {
 
     /* distort the point with the lens parameters */
     Eigen::Vector2f pDist = distortPoint(p);
+    Eigen::Vector2f pDist = p;
 
     /* convert 2d coordinate (0.0-1.0) to proper image coordinate */
     Eigen::Vector3f aP(pDist[0]*_res_x, 
@@ -229,10 +232,12 @@ Eigen::Vector2f SimpleRayCaster::distortPoint(Eigen::Vector2f &p) {
 
     // convert back to "0.0 - 1.0"
     xd = ((xd * _fx) + _cx) / (float)_res_x;
-    yd = ((yd * _fx) + _cx) / (float)_res_x;
+    yd = ((yd * _fy) + _cy) / (float)_res_y;
 
     Eigen::Vector2f pd;
     pd << xd, yd;
     return pd;
+}
+
 }
 
