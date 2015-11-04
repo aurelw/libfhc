@@ -9,6 +9,8 @@
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
 
+using namespace fhc;
+
 
 cv::Mat convertToPNG(const cv::Mat& input) {
     cv::Mat output(input.rows, input.cols, CV_8U);

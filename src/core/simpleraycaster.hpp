@@ -6,6 +6,8 @@
 #include <cv.h>
 
 
+namespace fhc {
+
 
 class SimpleRayCaster {
 
@@ -19,7 +21,7 @@ class SimpleRayCaster {
 
         void setDistortionModel(float k1, float k2, float k3, float p1, float p2);
         void setGeometry(PointCloud::ConstPtr points, 
-                const std::vector<pcl::Vertices>& inidices);
+                const std::vector<pcl::Vertices>& indices);
         void setGeometry(pcl::PolygonMesh::ConstPtr mesh);
         void printGeometry();
         void renderDebugImage(int width=32, int height=26);
@@ -56,3 +58,4 @@ class SimpleRayCaster {
 
 };
 
+}
