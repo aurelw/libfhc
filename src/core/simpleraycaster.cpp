@@ -127,7 +127,6 @@ std::vector<float> SimpleRayCaster::castRay(Eigen::Vector2f &p) {
 
     /* distort the point with the lens parameters */
     Eigen::Vector2f pDist = distortPoint(p);
-    Eigen::Vector2f pDist = p;
 
     /* convert 2d coordinate (0.0-1.0) to proper image coordinate */
     Eigen::Vector3f aP(pDist[0]*_res_x, 
