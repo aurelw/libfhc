@@ -6,18 +6,11 @@
 #include <pcl/PolygonMesh.h>
 
 #include "simpleraycaster.hpp"
+#include "utils.hpp"
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
 
 using namespace fhc;
-
-
-cv::Mat convertToPNG(const cv::Mat& input) {
-    cv::Mat output(input.rows, input.cols, CV_8U);
-    input.convertTo(output, CV_8U, 255);
-    cv::normalize(input, output, 0, 255, cv::NORM_MINMAX);
-    return output;
-}
 
 
 int main(int argc, char** argv) {
@@ -29,6 +22,10 @@ int main(int argc, char** argv) {
     float fy = 367.06039;
     float cx = 261.33521;
     float cy = 207.7928;
+    /*
+    float cx = res_x / 2;
+    float cy = res_y / 2;
+    */
     cv::Mat camMat = (cv::Mat_<float>(3,3)<< fx, 0.0, cx,
                                              0.0, fy, cy,
                                              0.0, 0.0, 1.0);
