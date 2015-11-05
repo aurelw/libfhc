@@ -14,3 +14,7 @@ set(test_cropping_files test_cropping.cpp utils.cpp)
 add_executable(test_cropping ${test_cropping_files})
 target_link_libraries(test_cropping core)
 
+# counting test
+set(test_counting_performance_files test_counting_performance.cpp utils.cpp)
+add_executable(test_counting_performance ${test_counting_performance_files})
+target_link_libraries(test_counting_performance core)

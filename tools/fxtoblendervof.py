@@ -17,3 +17,4 @@ print("fx: ", fx)
 print("X-Resolution: ", res_x)
 print("FOV-radians: ", fov_rad)
 print("FOV-degrees: ", fov)
+

@@ -25,8 +25,11 @@ class FastHullCollision {
         /* Call to finalize setup (geometry,distortion,..) */
         void setup();
 
-        cv::Mat maskDepthImageMM(cv::Mat img);
-        cv::Mat maskDepthImage(cv::Mat img);
+        cv::Mat maskDepthImageMM(const cv::Mat& img);
+        cv::Mat maskDepthImage(const cv::Mat& img);
+        int countInliers(const cv::Mat& img);
+        int countInliersMM(const cv::Mat& img);
+
 
 
     private:
@@ -36,6 +39,8 @@ class FastHullCollision {
         int _res_x, _res_y;
         cv::Mat _bgMask, _fgMask;
         cv::Mat _bgMaskMM, _fgMaskMM;
+
+        bool testImageSize(const cv::Mat& img);
 
 };
 

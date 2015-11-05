@@ -1,6 +1,7 @@
 
 #include "fasthullcollision.hpp"
 
+#include <assert.h>
 #include <highgui.h>
 
 
@@ -47,13 +48,9 @@ void FastHullCollision::setup() {
 }
 
 
-cv::Mat FastHullCollision::maskDepthImageMM(cv::Mat img) {
+cv::Mat FastHullCollision::maskDepthImageMM(const cv::Mat& img) {
     /* check the input size */
-    auto imgsize = img.size();
-    if (imgsize.width != _res_x || imgsize.height != _res_y) {
-        std::cout << "[ERROR] Wrong Image Size!!!" << std::endl;
-        return cv::Mat::zeros(_res_y, _res_x, CV_16UC1);
-    }
+    assert(testImageSize(img));
 
     cv::Mat out(_res_y, _res_x, CV_16UC1);
 
@@ -76,13 +73,9 @@ cv::Mat FastHullCollision::maskDepthImageMM(cv::Mat img) {
 }
 
 
-cv::Mat FastHullCollision::maskDepthImage(cv::Mat img) {
+cv::Mat FastHullCollision::maskDepthImage(const cv::Mat& img) {
     /* check the input size */
-    auto imgsize = img.size();
-    if (imgsize.width != _res_x || imgsize.height != _res_y) {
-        std::cout << "[ERROR] Wrong Image Size!!!" << std::endl;
-        return cv::Mat::zeros(_res_y, _res_x, CV_32FC1);
-    }
+    assert(testImageSize(img));
 
     cv::Mat out(_res_y, _res_x, CV_32FC1);
 
@@ -102,6 +95,54 @@ cv::Mat FastHullCollision::maskDepthImage(cv::Mat img) {
     }
 
     return out;
+}
+
+
+int FastHullCollision::countInliers(const cv::Mat& img) {
+    /* check the input size */
+    assert(testImageSize(img));
+
+    int inliers = 0;
+
+    for (int x=0; x<_res_x; x++) {
+        for (int y=0; y<_res_y; y++) {
+            float depth = img.at<float>(y,x);
+            if (_fgMask.at<float>(y,x) < depth &&
+                _bgMask.at<float>(y,x) > depth)
+            {   
+                inliers++;
+            }
+        }
+    }
+
+    return inliers;
+}
+
+
+int FastHullCollision::countInliersMM(const cv::Mat& img) {
+    /* check the input size */
+    assert(testImageSize(img));
+
+    int inliers = 0;
+
+    for (int x=0; x<_res_x; x++) {
+        for (int y=0; y<_res_y; y++) {
+            float depth = img.at<uint16_t>(y,x);
+            if (_fgMaskMM.at<uint16_t>(y,x) < depth &&
+                _bgMaskMM.at<uint16_t>(y,x) > depth)
+            {   
+                inliers++;
+            }
+        }
+    }
+
+    return inliers;
+}
+
+
+bool FastHullCollision::testImageSize(const cv::Mat& img) {
+    auto imgsize = img.size();
+    return (imgsize.width != _res_x || imgsize.height != _res_y);
 }
 
 }
