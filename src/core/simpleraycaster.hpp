@@ -19,18 +19,29 @@ class SimpleRayCaster {
 
         SimpleRayCaster(const cv::Mat& camMat, int res_x, int res_y);
 
+        /* Set an optional distortion model for the camera lens.
+         * Defaults to no distortion. */
         void setDistortionModel(float k1, float k2, float k3, float p1, float p2);
+        /* Set the mesh as a series of points and indices for (only) triangles. */
         void setGeometry(PointCloud::ConstPtr points, 
                 const std::vector<pcl::Vertices>& indices);
+        /* Set the geometry as a pcl mesh object. */
         void setGeometry(pcl::PolygonMesh::ConstPtr mesh);
-        void printGeometry();
-        void renderDebugImage(int width=32, int height=26);
 
+        /* Returns a floating point foreground/background mask
+         * in a tuple. For empty volumes the mask is set to 0.0 */
         std::tuple<cv::Mat, cv::Mat> renderZMasks();
+
+        /* Renders an ASCII art debug image. */
+        void renderDebugImage(int width=32, int height=26);
+        /* Prints al vertices and triangles for debugging. */
+        void printGeometry();
+
 
     protected:
 
-        /* Casts a ray at a given image coordinate.
+        /* Casts a ray at a given image coordinate. (x,y) is between 0.0 and 1.0
+         * and starts at the upper left corner.
          * Returns a list of z values, one of each intersection. */
         std::vector<float> castRay(Eigen::Vector2f &p);
         /* Intersec a ray starting at 0,0,0 and in direction of the parameter vec.
@@ -42,6 +53,9 @@ class SimpleRayCaster {
                 const Eigen::Vector3f c,
                 Eigen::Vector3f& isec);
 
+        /* Distort a point in the image with coordinates 0.0 - 1.0 on
+         * the x axis and 0.0 - 1.0 on the y axis starting at the top
+         * left corner */
         Eigen::Vector2f distortPoint(Eigen::Vector2f &p);
 
     private:
