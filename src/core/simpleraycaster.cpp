@@ -3,6 +3,7 @@
 
 #include <pcl/io/io.h>
 #include <pcl/io/vtk_lib_io.h>
+#include <pcl/common/transforms.h>
 
 
 namespace fhc {
@@ -42,9 +43,12 @@ void SimpleRayCaster::setGeometry(
 }
 
 
-void SimpleRayCaster::setGeometry(pcl::PolygonMesh::ConstPtr mesh) {
+void SimpleRayCaster::setGeometry(pcl::PolygonMesh::ConstPtr mesh,
+        const Eigen::Affine3f& transform) 
+{
     PointCloud::Ptr tmp(new PointCloud);
     pcl::fromPCLPointCloud2<pcl::PointXYZ>(mesh->cloud, *tmp);
+    pcl::transformPointCloud<pcl::PointXYZ, float>(*tmp, *tmp, transform);
     _fPoints = tmp;
     _fIndices = mesh->polygons;
  }

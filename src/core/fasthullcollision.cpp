@@ -28,8 +28,8 @@ void FastHullCollision::setGeometry(PointCloud::ConstPtr points,
 }
 
 
-void FastHullCollision::setGeometry(pcl::PolygonMesh::ConstPtr mesh) {
-    _rayCaster.setGeometry(mesh);
+void FastHullCollision::setGeometry(pcl::PolygonMesh::ConstPtr mesh, Eigen::Affine3f transform) {
+    _rayCaster.setGeometry(mesh, transform);
 }
 
 
