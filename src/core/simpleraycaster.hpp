@@ -26,7 +26,7 @@ class SimpleRayCaster {
         void setGeometry(PointCloud::ConstPtr points, 
                 const std::vector<pcl::Vertices>& indices);
         /* Set the geometry as a pcl mesh object. */
-        void setGeometry(pcl::PolygonMesh::ConstPtr mesh);
+        void setGeometry(pcl::PolygonMesh::ConstPtr mesh, const Eigen::Affine3f& transform=Eigen::Affine3f::Identity());
 
         /* Returns a floating point foreground/background mask
          * in a tuple. For empty volumes the mask is set to 0.0 */

@@ -29,6 +29,10 @@ int main(int argc, char** argv) {
     cv::Mat camMat = (cv::Mat_<float>(3,3)<< fx, 0.0, cx,
                                              0.0, fy, cy,
                                              0.0, 0.0, 1.0);
+    /*
+    Eigen::Affine3f camextr = pcl::getTransformation(-1.7217004, 0, 3.14074, 
+             pcl::deg2rad(131.22336 - 90), pcl::deg2rad(-179.64928), pcl::deg2rad(129.01939)).inverse();
+    */
 
     /* load geometry */
     pcl::PolygonMesh::Ptr mesh(new pcl::PolygonMesh);
@@ -40,6 +44,7 @@ int main(int argc, char** argv) {
     SimpleRayCaster rc(camMat, res_x, res_y);
     rc.setDistortionModel(0.091808669, -0.27344111, 0.094382137, 0.0, 0.0);
     //rc.setGeometry(geometryCloud, mesh->polygons);
+    //rc.setGeometry(mesh, camextr);
     rc.setGeometry(mesh);
     //rc.printGeometry();
 

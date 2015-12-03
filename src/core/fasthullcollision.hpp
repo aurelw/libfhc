@@ -23,7 +23,7 @@ class FastHullCollision {
         void setGeometry(PointCloud::ConstPtr points, 
                 const std::vector<pcl::Vertices>& indices);
         /* Set a triangle mesh as the hit volume, alternative interface. */
-        void setGeometry(pcl::PolygonMesh::ConstPtr mesh);
+        void setGeometry(pcl::PolygonMesh::ConstPtr mesh, Eigen::Affine3f transform=Eigen::Affine3f::Identity());
 
         /* Call to finalize setup (geometry,distortion,..) */
         void setup();
@@ -42,8 +42,6 @@ class FastHullCollision {
         /* Count the inliers in a unsigned 16 bit integer
          * image at a scale of 1:1000 */
         int countInliersMM(const cv::Mat& img);
-
-
 
     private:
 
