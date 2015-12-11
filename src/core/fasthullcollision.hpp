@@ -45,11 +45,16 @@ class FastHullCollision {
 
     private:
 
+        cv::Rect calculateROI();
+        bool emptyRow(int y);
+        bool emptyCol(int x);
+
         SimpleRayCaster _rayCaster;
 
         int _res_x, _res_y;
         cv::Mat _bgMask, _fgMask;
         cv::Mat _bgMaskMM, _fgMaskMM;
+        cv::Rect _roi;
 
         bool testImageSize(const cv::Mat& img);
 

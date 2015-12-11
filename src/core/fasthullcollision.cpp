@@ -9,7 +9,8 @@ namespace fhc {
 
 
 FastHullCollision::FastHullCollision(const cv::Mat& camMat, int res_x, int res_y) :
-    _rayCaster(camMat, res_x, res_y), _res_x(res_x), _res_y(res_y)
+    _rayCaster(camMat, res_x, res_y), _res_x(res_x), _res_y(res_y),
+    _roi(0, 0, res_x, res_y)
 {
 }
 
@@ -45,6 +46,8 @@ void FastHullCollision::setup() {
     _bgMaskMM = cv::Mat(_res_y, _res_x, CV_16UC1);
     _fgMask.convertTo(_fgMaskMM, CV_16UC1, 1000);
     _bgMask.convertTo(_bgMaskMM, CV_16UC1, 1000);
+
+    _roi = calculateROI();
 }
 
 
@@ -104,8 +107,8 @@ int FastHullCollision::countInliers(const cv::Mat& img) {
 
     int inliers = 0;
 
-    for (int x=0; x<_res_x; x++) {
-        for (int y=0; y<_res_y; y++) {
+    for (int x=_roi.x; x < (_roi.x + _roi.width); x++) {
+        for (int y=_roi.y; y < (_roi.y + _roi.height); y++) {
             float depth = img.at<float>(y,x);
             if (_fgMask.at<float>(y,x) < depth &&
                 _bgMask.at<float>(y,x) > depth)
@@ -125,8 +128,8 @@ int FastHullCollision::countInliersMM(const cv::Mat& img) {
 
     int inliers = 0;
 
-    for (int x=0; x<_res_x; x++) {
-        for (int y=0; y<_res_y; y++) {
+    for (int x=_roi.x; x < (_roi.x + _roi.width); x++) {
+        for (int y=_roi.y; y < (_roi.y + _roi.height); y++) {
             float depth = img.at<uint16_t>(y,x);
             if (_fgMaskMM.at<uint16_t>(y,x) < depth &&
                 _bgMaskMM.at<uint16_t>(y,x) > depth)
@@ -144,6 +147,74 @@ bool FastHullCollision::testImageSize(const cv::Mat& img) {
     auto imgsize = img.size();
     return (imgsize.width != _res_x || imgsize.height != _res_y);
 }
+
+
+bool FastHullCollision::emptyCol(int x) {
+    for (int y=0; y<_res_y; y++) {
+        if (_fgMaskMM.at<uint16_t>(y,x) != 0) return false;
+        if (_bgMaskMM.at<uint16_t>(y,x) != 0) return false;
+    }
+
+    return true;
+}
+
+
+bool FastHullCollision::emptyRow(int y) {
+    for (int x=0; x<_res_x; x++) {
+        if (_fgMaskMM.at<uint16_t>(y,x) != 0) return false;
+        if (_bgMaskMM.at<uint16_t>(y,x) != 0) return false;
+    }
+
+    return true;
+}
+
+
+cv::Rect FastHullCollision::calculateROI() {
+    int x0 = 0;
+    int x1 = 0;
+    int y0 = 0;
+    int y1 = 0;
+
+    for (int x=0; x<_res_x; x++) {
+        if (emptyCol(x)) {
+            x0 = x+1;
+        } else {
+            break;
+        }
+    }
+
+    for (int x=x0; x<_res_x; x++) {
+        if (!emptyCol(x)) {
+            x1 = x;
+        }
+    }
+
+    for (int y=0; y<_res_y; y++) {
+        if (emptyRow(y)) {
+            y0 = y+1;
+        } else {
+            break;
+        }
+    }
+
+    for (int y=y0; y<_res_y; y++) {
+        if (!emptyCol(y)) {
+            y1 = y;
+        }
+    }
+
+    /* an empty mask has no valid roi */ 
+    if (x0 > x1) {
+        x0 = x1 = 0;
+    }
+    if (y0 > y1) {
+        y0 = y1 = 0;
+    }
+
+    return cv::Rect(x0, y0, x1-x0, y1-y0);
+
+}
+
 
 }
 

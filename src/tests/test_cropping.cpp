@@ -8,7 +8,7 @@
 #include "fasthullcollision.hpp"
 #include "utils.hpp"
 
-#define WITH_EXTRINSIC 1
+#define WITH_EXTRINSIC 0
 
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
@@ -52,7 +52,11 @@ int main(int argc, char** argv) {
     pcl::io::loadPolygonFileSTL("crop_hull.stl", *mesh);
 
     FastHullCollision fastHC(camMat, res_x, res_y);
+#if WITH_EXTRINSIC
     fastHC.setGeometry(mesh, camextr);
+#else
+    fastHC.setGeometry(mesh);
+#endif
     fastHC.setup();
 
 #if ! WITH_EXTRINSIC
