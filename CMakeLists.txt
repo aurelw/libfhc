@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(libfhc)
 
+set (CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+
 option (WITH_LLVM "Build with clang and llvm." OFF)
 option (WITH_C++11 "Be lame and downgrade to C++11 (g++)." OFF)
 option (BUILD_CORE "Build core" ON)
