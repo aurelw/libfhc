@@ -38,7 +38,7 @@ include_directories(${Boost_INCLUDE_DIR} )
 find_package( OpenCV 2.3 REQUIRED )
 
 # PCL 1.8
-find_package(PCL 1.8 REQUIRED)
+find_package(PCL 1.7 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
