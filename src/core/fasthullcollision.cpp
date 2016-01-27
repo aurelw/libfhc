@@ -45,6 +45,8 @@ void FastHullCollision::setup() {
     _bgMask.convertTo(_bgMaskMM, CV_16UC1, 1000);
 
     _roi = calculateROI();
+
+    _maskSize = computeMaskSize();
 }
 
 
@@ -233,5 +235,22 @@ cv::Mat FastHullCollision::getFgMaskMM() {
 }
 
 
+int FastHullCollision::getMaskSize() {
+    return _maskSize;
 }
+
+
+int FastHullCollision::computeMaskSize() {
+    int masksize = 0;
+    for (int x=_roi.x; x < (_roi.x + _roi.width); x++) {
+        for (int y=_roi.y; y < (_roi.y + _roi.height); y++) {
+            if (_fgMask.at<float>(y,x) != 0) masksize++;
+        }
+    }
+    return masksize;
+}
+
+
+}
+
 

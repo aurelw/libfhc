@@ -50,6 +50,10 @@ class FastHullCollision {
         cv::Mat getBgMaskMM();
         cv::Mat getFgMaskMM();
 
+        /* Returns the size of the mask in pixel.
+         * This is also the theoretical highest number of inliers */
+        int getMaskSize();
+
     private:
 
         cv::Rect calculateROI();
@@ -62,6 +66,9 @@ class FastHullCollision {
         cv::Mat _bgMask, _fgMask;
         cv::Mat _bgMaskMM, _fgMaskMM;
         cv::Rect _roi;
+
+        int computeMaskSize();
+        int _maskSize = 0;
 
         bool testImageSize(const cv::Mat& img);
 

@@ -64,6 +64,8 @@ int main(int argc, char** argv) {
     cv::imwrite("masked_depth_image.exr", outImage);
 #endif
 
+    std::cout << "Mask size: " << fastHC.getMaskSize() << std::endl;
+
     cv::Mat outImageMM = fastHC.maskDepthImageMM(mmRangeImage);
     cv::imwrite("masked_depth_image_mm.exr", outImageMM);
 
