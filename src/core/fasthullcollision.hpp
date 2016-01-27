@@ -43,6 +43,13 @@ class FastHullCollision {
          * image at a scale of 1:1000 */
         int countInliersMM(const cv::Mat& img);
 
+        /* Return a copy of the foreground and background mask
+         * images. This should help in debugging. */
+        cv::Mat getBgMask();
+        cv::Mat getFgMask();
+        cv::Mat getBgMaskMM();
+        cv::Mat getFgMaskMM();
+
     private:
 
         cv::Rect calculateROI();

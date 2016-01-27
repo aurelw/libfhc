@@ -39,9 +39,6 @@ void FastHullCollision::setup() {
     _fgMask = std::get<0>(masks);
     _bgMask = std::get<1>(masks);
 
-    cv::imwrite("crophull_fgmask.exr", _fgMask);
-    cv::imwrite("crophull_bgmask.exr", _bgMask);
-
     _fgMaskMM = cv::Mat(_res_y, _res_x, CV_16UC1);
     _bgMaskMM = cv::Mat(_res_y, _res_x, CV_16UC1);
     _fgMask.convertTo(_fgMaskMM, CV_16UC1, 1000);
@@ -213,6 +210,26 @@ cv::Rect FastHullCollision::calculateROI() {
 
     return cv::Rect(x0, y0, x1-x0, y1-y0);
 
+}
+
+
+cv::Mat FastHullCollision::getBgMask() {
+    return _bgMask.clone();
+}
+
+
+cv::Mat FastHullCollision::getFgMask() {
+    return _fgMask.clone();
+}
+
+
+cv::Mat FastHullCollision::getBgMaskMM() {
+    return _bgMaskMM.clone();
+}
+
+
+cv::Mat FastHullCollision::getFgMaskMM() {
+    return _fgMaskMM.clone();
 }
 
 
