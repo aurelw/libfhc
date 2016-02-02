@@ -52,7 +52,7 @@ fastHC.setup();
 ```
 
 ### Input Image Format
-Images are handled by OpenCV's cv::Mat class. The pixel type can be either floating point or 16 bit integer (CV_32FC1, CV_16UC1). 16 bit, unsigned integers is a very common format for depth cameras. In libfhc, one *tick* of the 16 bit value corresponds to 1/1000th Unit of the 3D mesh. This was chosen because the input data libfhc was initialy designed for encoded 1 mm to each increment of the 16 bit value. If you happen to have a different mapping, scale the hit volume geometry or convert the input image to floating point pixels.
+Images are handled by OpenCV's cv::Mat class. The pixel type can be either floating point or 16 bit integer (CV_32FC1, CV_16UC1). 16 bit, unsigned integers is a very common format for depth cameras. In libfhc, one *tick* of the 16 bit value corresponds to 1/1000th Unit of the 3D mesh. This was chosen because the input data libfhc was initially designed for encoded 1 mm to each increment of the 16 bit value. If you happen to have a different mapping, scale the hit volume geometry or convert the input image to floating point pixels.
 
 ### Compile and Install
 Building and installation is done via cmake:
@@ -67,7 +67,7 @@ make
 make install # as root
 ```
 
-OpenCV, Eigen as well as libpcl are required. libpcl is needed to handle the input meshes and for some transformations, which is a rather heavy weight dependency in that manner and may be removed later on. At the moment the library was used in build environments which rely on pcl anyways, so feel free to request such a change if you need it.
+OpenCV, Eigen as well as libpcl are required. libpcl is needed to handle the input meshes and for some transformations, which is a rather heavy weight dependency in that manner and may be removed later on. At the moment the library is only used in build environments which rely on pcl anyways, but feel free to request such a change if you need it.
 
 ### Typical Use Cases
   * We use this library for building triggers on depth video streams which start further processing.
